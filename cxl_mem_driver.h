@@ -8,7 +8,7 @@
 #include <linux/init.h>
 #include <linux/cdev.h>
 #include <linux/delay.h>
-#include <linux/poll.h>
+#include <asm-generic/ioctl.h>
 #include <linux/device.h>
 #include <linux/pci.h>
 #include <linux/interrupt.h> 
@@ -33,7 +33,7 @@
 #define BUSY true
 #define FREE false
 static int cur_count=0;
-static struct cxl_mem* cxl_memPs[MAX_NRs]
+static struct cxl_mem* cxl_memPs[MAX_NRs];
 
 /**ioctlCmd组成: 
  *设备类型8bit|序列号8bit|方向2bit 用户<->内核|数据尺寸8-14bit 
@@ -45,7 +45,7 @@ static struct cxl_mem* cxl_memPs[MAX_NRs]
 /* 定义具体的ioctl指令*/
 
 /* 1.获取当前资源信息*/
-#define CXL_MEM_GET_INFO _IOR()
+#define CXL_MEM_GET_INFO _IO(CXL_MEM_TYPE,0)
 
 /**内存区域结构体*/
 typedef struct area

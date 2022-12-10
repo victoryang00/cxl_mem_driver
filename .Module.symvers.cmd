@@ -1,0 +1,1 @@
+cmd_/home/zjt/myproject/cxl_driver/Module.symvers := sed 's/\.ko$$/\.o/' /home/zjt/myproject/cxl_driver/modules.order | scripts/mod/modpost -m -a  -o /home/zjt/myproject/cxl_driver/Module.symvers -e -i Module.symvers   -T -
