@@ -25,7 +25,7 @@ int main( void )
 	sleep(1);//睡眠15秒，在命令行查看映射后的内存图，如果多出了映射段，说明映射成功
 	
 	/*测试二：往映射段读写数据，看是否成功*/
-    printf("原始数据：%s\n",mapBuf);
+  printf("原始数据：%s\n",mapBuf);
 	strcpy(mapBuf, "hello,world!");//向映射段写数据
 	memset(buffer, 0, 1024);
 	strcpy(buffer, mapBuf);//从映射段读取数据
