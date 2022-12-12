@@ -1,19 +1,7 @@
 #ifndef _CXL_MEM_DRIVER_H
 #define _CXL_MEM_DRIVER_H
 
-#include <linux/module.h>
-#include <linux/kernel.h>
-#include <linux/fs.h>
-#include <linux/signal.h>
-#include <linux/init.h>
-#include <linux/cdev.h>
-#include <linux/delay.h>
-#include <asm-generic/ioctl.h>
-#include <linux/device.h>
-#include <linux/pci.h>
-#include <linux/interrupt.h> 
-#include <linux/uaccess.h> 
-#include <asm/current.h> 
+
 
 /*为设备分配的主从设备号*/
 #define DEVICE_MAJOR               500
@@ -26,15 +14,15 @@
 /*定义最大设备数量*/
 #define MAX_NRs             8
 /*假设设备使用两个bar寄存器，一个映射内存寄存器，一个映射存储空间*/
-#define BAR_NRs              2
-/*定义设备名称*/
-#define DEV_NAME			"cxl_mem"
+#define BAR_NRs             2
+
 /*定义连续内存区域状态*/
 #define BUSY true
 #define FREE false
-static int cur_count=0;
-static struct cxl_mem* cxl_memPs[MAX_NRs];
-
+int cur_count=0;
+struct cxl_mem* cxl_memPs[MAX_NRs] = {NULL};
+/*定义设备名称*/
+char DEV_NAME[20];
 /**ioctlCmd组成: 
  *设备类型8bit|序列号8bit|方向2bit 用户<->内核|数据尺寸8-14bit 
  * *
@@ -66,9 +54,10 @@ typedef struct areaNode
 
 static struct pci_device_id ids[] = {
    {PCI_DEVICE(CXL_MEM_VENDOR_ID,CXL_MEM_DEVICE_ID) },
+   {PCI_DEVICE(0x10ec,0x8852)},
    { 0,}  //最后一组是0，表示结束
 };
-
+MODULE_DEVICE_TABLE(pci, ids);
 struct bar_info
 {
     //bar空间基地址 
@@ -85,7 +74,6 @@ struct cxl_mem
 	dev_t			devno;
     struct class 	*cxl_mem_class;
     struct bar_info *bar_infoP;
-    char			*mem_buf;
     int irq;
     areaNodeP headP;
     areaNodeP tailP;
